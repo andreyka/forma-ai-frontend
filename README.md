@@ -11,7 +11,7 @@ AI agent that turns natural language into engineered 3D assets. The UI is inspir
 ### Prerequisites
 
 - Node.js **20.9+** (Next.js 16 requires native node-webkit timers only available in Node 20).
-- Running Forma AI Agent backend at `http://localhost:8000` for generate endpoints & preview assets.
+- Running Forma AI Agent backend at `http://localhost:8001` for generate endpoints & preview assets.
 
 ### Local development
 
