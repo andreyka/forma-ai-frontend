@@ -2,7 +2,6 @@ import React from "react";
 import { User, Sparkles, Download } from "lucide-react";
 import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
-import { GenerateResponse } from "@/lib/api";
 
 // Dynamic import for ModelViewer to avoid SSR issues with Three.js
 const ModelViewer = dynamic(() => import("../ModelViewer"), {
@@ -14,11 +13,16 @@ const ModelViewer = dynamic(() => import("../ModelViewer"), {
     ),
 });
 
+export interface ModelData {
+    stl_url: string;
+    step_url: string;
+}
+
 export interface Message {
     role: "user" | "assistant";
     content: string;
     isError?: boolean;
-    modelData?: GenerateResponse;
+    modelData?: ModelData;
 }
 
 interface ChatMessageProps {

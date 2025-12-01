@@ -2,12 +2,18 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Chat from '@/components/Chat';
-import { generateModel } from '@/lib/api';
+import { sendMessage, pollTask, getFileUrl, TaskState } from '@/lib/api';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 // Mock the API
 vi.mock('@/lib/api', () => ({
-    generateModel: vi.fn(),
+    sendMessage: vi.fn(),
+    pollTask: vi.fn(),
+    getFileUrl: vi.fn((path) => path ? `http://localhost:8001${path}` : undefined),
+    TaskState: {
+        COMPLETED: 'TASK_STATE_COMPLETED',
+        FAILED: 'TASK_STATE_FAILED',
+    }
 }));
 
 // Mock ModelViewer since it uses Canvas/WebGL which might be tricky in jsdom
@@ -40,12 +46,15 @@ describe('Chat Component', () => {
     });
 
     it('submits form and displays user message', async () => {
-        vi.mocked(generateModel).mockResolvedValueOnce({
-            message: 'Success',
-            code: 'SUCCESS',
-            step_url: 'http://example.com/model.step',
-            stl_url: 'http://example.com/model.stl',
-        });
+        vi.mocked(sendMessage).mockResolvedValueOnce({ id: 'task-123' } as any);
+        vi.mocked(pollTask).mockResolvedValueOnce({
+            id: 'task-123',
+            status: { state: TaskState.COMPLETED },
+            history: [{
+                role: 'ROLE_AGENT',
+                parts: [{ text: 'Success' }]
+            }]
+        } as any);
 
         render(<Chat />);
         const input = screen.getByPlaceholderText('Ask Forma AI');
@@ -67,13 +76,29 @@ describe('Chat Component', () => {
     });
 
     it('displays assistant response and model viewer on success', async () => {
-        const mockData = {
-            message: 'Success',
-            code: 'SUCCESS',
-            step_url: 'http://example.com/model.step',
-            stl_url: 'http://example.com/model.stl',
-        };
-        vi.mocked(generateModel).mockResolvedValueOnce(mockData);
+        vi.mocked(sendMessage).mockResolvedValueOnce({ id: 'task-123' } as any);
+        vi.mocked(pollTask).mockResolvedValueOnce({
+            id: 'task-123',
+            status: { state: TaskState.COMPLETED },
+            history: [{
+                role: 'ROLE_AGENT',
+                parts: [
+                    { text: 'Success' },
+                    {
+                        file: {
+                            fileWithUri: '/download/model.stl',
+                            mediaType: 'model/stl'
+                        }
+                    },
+                    {
+                        file: {
+                            fileWithUri: '/download/model.step',
+                            mediaType: 'model/step'
+                        }
+                    }
+                ]
+            }]
+        } as any);
 
         render(<Chat />);
         const input = screen.getByPlaceholderText('Ask Forma AI');
@@ -83,16 +108,16 @@ describe('Chat Component', () => {
         fireEvent.click(button);
 
         await waitFor(() => {
-            expect(screen.getByText(/I've generated your 3D model!/i)).toBeInTheDocument();
+            expect(screen.getByText(/Success/i)).toBeInTheDocument();
         });
 
-        expect(screen.getByTestId('model-viewer')).toHaveTextContent('ModelViewer Mock: http://example.com/model.stl');
-        expect(screen.getByText('STEP').closest('a')).toHaveAttribute('href', 'http://example.com/model.step');
-        expect(screen.getByText('STL').closest('a')).toHaveAttribute('href', 'http://example.com/model.stl');
+        expect(screen.getByTestId('model-viewer')).toHaveTextContent('ModelViewer Mock: http://localhost:8001/download/model.stl');
+        expect(screen.getByText('STEP').closest('a')).toHaveAttribute('href', 'http://localhost:8001/download/model.step');
+        expect(screen.getByText('STL').closest('a')).toHaveAttribute('href', 'http://localhost:8001/download/model.stl');
     });
 
     it('displays error message on API failure', async () => {
-        vi.mocked(generateModel).mockRejectedValueOnce(new Error('API Error'));
+        vi.mocked(sendMessage).mockRejectedValueOnce(new Error('API Error'));
 
         render(<Chat />);
         const input = screen.getByPlaceholderText('Ask Forma AI');

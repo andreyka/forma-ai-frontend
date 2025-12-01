@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { generateModel } from "@/lib/api";
+import { sendMessage, pollTask, getFileUrl, TaskState } from "@/lib/api";
 import ChatMessage, { Message } from "./chat/ChatMessage";
 import ChatInput from "./chat/ChatInput";
 
@@ -30,13 +30,56 @@ export default function Chat(): React.JSX.Element {
         setLoading(true);
 
         try {
-            const data = await generateModel(userMessage);
+            // 1. Send message to start task
+            const task = await sendMessage(userMessage);
+
+            // 2. Poll for completion
+            const completedTask = await pollTask(task.id);
+
+            if (completedTask.status.state !== TaskState.COMPLETED) {
+                throw new Error(`Task failed with state: ${completedTask.status.state}`);
+            }
+
+            // 3. Extract artifacts
+            // We expect the agent to return a message with file parts or artifacts
+            // For now, let's look for file parts in the last message from the agent
+            const lastMessage = completedTask.history.findLast(m => m.role === "ROLE_AGENT");
+
+            let stlUrl = "";
+            let stepUrl = "";
+            let responseText = "Task completed.";
+
+            if (lastMessage) {
+                // Extract text
+                const textPart = lastMessage.parts.find(p => p.text);
+                if (textPart?.text) {
+                    responseText = textPart.text;
+                }
+
+                // Extract files
+                lastMessage.parts.forEach(part => {
+                    if (part.file) {
+                        const url = getFileUrl(part.file.fileWithUri);
+                        if (url) {
+                            if (part.file.mediaType === "model/stl" || part.file.name?.endsWith(".stl")) {
+                                stlUrl = url;
+                            } else if (part.file.mediaType === "model/step" || part.file.name?.endsWith(".step")) {
+                                stepUrl = url;
+                            }
+                        }
+                    }
+                });
+            }
+
             setMessages((prev) => [
                 ...prev,
                 {
                     role: "assistant",
-                    content: "I've generated your 3D model! Here's a preview and download links:",
-                    modelData: data
+                    content: responseText,
+                    modelData: (stlUrl && stepUrl) ? {
+                        stl_url: stlUrl,
+                        step_url: stepUrl
+                    } : undefined
                 },
             ]);
         } catch (error) {
