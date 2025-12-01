@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest"
+    "test": "vitest",
+    "check": "gts check",
+    "clean": "gts clean",
+    "fix": "eslint --fix \"app/**/*.{ts,tsx}\" \"components/**/*.{ts,tsx}\" \"lib/**/*.{ts,tsx}\""
   },
   "engines": {
     "node": ">=20.9.0"
@@ -37,6 +40,7 @@
     "@vitejs/plugin-react": "^5.1.1",
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
+    "gts": "^6.0.2",
     "jsdom": "^22.1.0",
     "postcss": "^8.4.35",
     "tailwindcss": "^4.0.0",
