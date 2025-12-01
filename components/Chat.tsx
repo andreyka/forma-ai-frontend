@@ -27,13 +27,19 @@ interface Message {
     modelData?: GenerateResponse;
 }
 
-export default function Chat() {
-    const [input, setInput] = useState("");
-    const [loading, setLoading] = useState(false);
+/**
+ * Main Chat component for interacting with the Forma AI agent.
+ * Handles message history, user input, and displaying generated models.
+ *
+ * @returns The rendered Chat component.
+ */
+export default function Chat(): React.JSX.Element {
+    const [input, setInput] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    const scrollToBottom = () => {
+    const scrollToBottom = (): void => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
@@ -41,7 +47,7 @@ export default function Chat() {
         scrollToBottom();
     }, [messages]);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent): Promise<void> => {
         e.preventDefault();
         if (!input.trim() || loading) return;
 

@@ -10,7 +10,14 @@ interface ModelViewerProps {
     stlUrl: string | null;
 }
 
-function Model({ url }: { url: string }) {
+/**
+ * Internal component to load and render the STL model.
+ *
+ * @param props - Component props.
+ * @param props.url - The URL of the STL file to load.
+ * @returns The rendered mesh component.
+ */
+function Model({ url }: { url: string }): React.JSX.Element {
     const geom = useLoader(STLLoader, url);
     const meshRef = useRef<Mesh>(null);
 
@@ -21,7 +28,14 @@ function Model({ url }: { url: string }) {
     );
 }
 
-export default function ModelViewer({ stlUrl }: ModelViewerProps) {
+/**
+ * Component to view a 3D model from an STL URL.
+ *
+ * @param props - Component props.
+ * @param props.stlUrl - The URL of the STL file to display. Returns a placeholder if null.
+ * @returns The rendered ModelViewer component.
+ */
+export default function ModelViewer({ stlUrl }: ModelViewerProps): React.JSX.Element {
     if (!stlUrl) {
         return (
             <div className="flex items-center justify-center h-full w-full bg-slate-900/50 rounded-xl border border-slate-800 text-slate-400">

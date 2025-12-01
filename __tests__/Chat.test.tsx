@@ -40,7 +40,7 @@ describe('Chat Component', () => {
     });
 
     it('submits form and displays user message', async () => {
-        (generateModel as any).mockResolvedValueOnce({
+        vi.mocked(generateModel).mockResolvedValueOnce({
             message: 'Success',
             code: 'SUCCESS',
             step_url: 'http://example.com/model.step',
@@ -73,7 +73,7 @@ describe('Chat Component', () => {
             step_url: 'http://example.com/model.step',
             stl_url: 'http://example.com/model.stl',
         };
-        (generateModel as any).mockResolvedValueOnce(mockData);
+        vi.mocked(generateModel).mockResolvedValueOnce(mockData);
 
         render(<Chat />);
         const input = screen.getByPlaceholderText('Ask Forma AI');
@@ -92,7 +92,7 @@ describe('Chat Component', () => {
     });
 
     it('displays error message on API failure', async () => {
-        (generateModel as any).mockRejectedValueOnce(new Error('API Error'));
+        vi.mocked(generateModel).mockRejectedValueOnce(new Error('API Error'));
 
         render(<Chat />);
         const input = screen.getByPlaceholderText('Ask Forma AI');
