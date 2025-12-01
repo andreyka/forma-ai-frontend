@@ -4,8 +4,8 @@ AI agent that turns natural language into engineered 3D assets. The UI is inspir
 
 ### Highlights
 
-- **Centered Gemini canvas** – hero badge + title proclaiming the "3D Model Generator Agent" experience, with supporting capability chips.
-- **Conversational glass surface** – assistant/user bubbles, quick prompt chips, and inline download CTAs.
+- **Centered introduction canvas** – hero badge + title proclaiming the "3D Model Generator Agent" experience, with supporting capability chips.
+- **Conversational chat surface** – assistant/user bubbles, quick prompt chips, and inline download CTAs.
 - **Live geometry preview** – dynamic STEP/STL links plus an embedded WebGL viewer powered by `@react-three/fiber` and `three-stdlib` (static PNG previews are optional and fall back gracefully).
 
 ### Prerequisites
