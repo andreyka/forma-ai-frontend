@@ -80,7 +80,7 @@ export default function Chat() {
                 <div className="flex flex-1 flex-col items-center justify-center px-4 transition-all duration-500 ease-in-out">
                     <h1 className="mb-12 text-5xl font-medium tracking-tight sm:text-6xl">
                         <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-red-400 bg-clip-text text-transparent">
-                            Hello, this is a Text to CAD AI agent!
+                            Hello, this is the Forma AI agent!
                         </span>
                     </h1>
                 </div>
@@ -162,7 +162,7 @@ export default function Chat() {
                                 type="text"
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
-                                placeholder="Ask Text to CAD"
+                                placeholder="Ask Forma AI"
                                 className="w-full bg-transparent px-4 py-3 text-lg text-white placeholder:text-neutral-500 focus:outline-none"
                                 disabled={loading}
                             />
