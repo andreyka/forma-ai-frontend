@@ -11,7 +11,7 @@ Forma AI is an AI agent that turns natural language into engineered 3D assets. T
 ### Prerequisites
 
 - Node.js **20.9+** (Next.js 16 requires native node-webkit timers only available in Node 20).
-- Running [Forma AI Agent service](https://github.com/forma-ai/forma-ai-service) at `http://localhost:8001` for generate endpoints & preview assets.
+- Running [Forma AI Agent service](https://github.com/andreyka/forma-ai-service) at `http://localhost:8001` for generate endpoints & preview assets.
 
 ### Local development
 
