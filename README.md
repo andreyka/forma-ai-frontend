@@ -41,7 +41,30 @@ npm run build  # Production build validation
 
 ### Deployment
 
-To deploy using Docker:
+#### Using Docker Compose (Recommended)
+
+This project includes a `docker-compose.yml` file that orchestrates both the frontend and the backend service.
+
+> [!WARNING]
+> The backend service image is large (~3-5GB) as it includes PyTorch, VTK, and Playwright browsers. Please ensure you have sufficient disk space and a stable internet connection.
+
+1.  **Configure Environment**:
+    Copy the example environment file and fill in your API keys (e.g., OpenAI, Gemini).
+    ```bash
+    cp .env.example .env
+    # Edit .env with your keys
+    ```
+
+2.  **Run with Docker Compose**:
+    ```bash
+    docker compose up --build
+    ```
+    - Frontend: `http://localhost:3000`
+    - Backend: `http://localhost:8000`
+
+#### Manual Docker Build
+
+To deploy just the frontend using Docker:
 
 ```bash
 # 1. Build the image
