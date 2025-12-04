@@ -1,6 +1,6 @@
 ## Forma AI Frontend
 
-AI agent that turns natural language into engineered 3D assets. The UI is inspired by the Gemini interface with a multi-layer aurora backdrop, conversational card, and live 3D preview rail.
+Forma AI is an AI agent that turns natural language into engineered 3D assets. This is the UI component of the Forma AI system, which is inspired by the Gemini interface with a multi-layer aurora backdrop, conversational card. It also features an embedded live 3D preview rail.
 
 ### Highlights
 
@@ -11,7 +11,7 @@ AI agent that turns natural language into engineered 3D assets. The UI is inspir
 ### Prerequisites
 
 - Node.js **20.9+** (Next.js 16 requires native node-webkit timers only available in Node 20).
-- Running Forma AI Agent backend at `http://localhost:8001` for generate endpoints & preview assets.
+- Running [Forma AI Agent service](https://github.com/forma-ai/forma-ai-service) at `http://localhost:8001` for generate endpoints & preview assets.
 
 ### Local development
 
